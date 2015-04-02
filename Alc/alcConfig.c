@@ -299,6 +299,7 @@ static void LoadConfigFromFile(FILE *f)
 #ifdef _WIN32
 void ReadALConfig(void)
 {
+#ifdef CSIDL_APPDATA
     WCHAR buffer[PATH_MAX];
     const WCHAR *str;
     FILE *f;
@@ -333,6 +334,7 @@ void ReadALConfig(void)
         }
         al_string_deinit(&filepath);
     }
+#endif // CSIDL_APPDATA
 }
 #else
 void ReadALConfig(void)

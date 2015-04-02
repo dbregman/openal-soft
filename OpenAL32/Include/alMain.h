@@ -961,6 +961,13 @@ void FillCPUCaps(ALuint capfilter);
 
 FILE *OpenDataFile(const char *fname, const char *subdir);
 
+#if WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP
+inline const char *getenv(const char *var)
+{
+	return NULL;
+}
+#endif
+
 /* Small hack to use a pointer-to-array type as a normal argument type.
  * Shouldn't be used directly. */
 typedef ALfloat ALfloatBUFFERSIZE[BUFFERSIZE];

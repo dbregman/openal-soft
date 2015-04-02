@@ -106,7 +106,6 @@ extern inline ALuint fastf2u(ALfloat f);
 
 ALuint CPUCapFlags = 0;
 
-
 void FillCPUCaps(ALuint capfilter)
 {
     ALuint caps = 0;
@@ -363,6 +362,7 @@ static WCHAR *FromUTF8(const char *str)
 
 void *LoadLib(const char *name)
 {
+#if WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP
     HANDLE hdl = NULL;
     WCHAR *wname;
 
@@ -375,6 +375,9 @@ void *LoadLib(const char *name)
         free(wname);
     }
     return hdl;
+#else
+	return NULL;
+#endif
 }
 void CloseLib(void *handle)
 { FreeLibrary((HANDLE)handle); }
@@ -454,6 +457,7 @@ static inline int is_slash(int c)
 
 FILE *OpenDataFile(const char *fname, const char *subdir)
 {
+#ifdef CSIDL_APPDATA
     static const int ids[2] = { CSIDL_APPDATA, CSIDL_COMMON_APPDATA };
     WCHAR *wname=NULL, *wsubdir=NULL;
     FILE *f;
@@ -526,6 +530,8 @@ FILE *OpenDataFile(const char *fname, const char *subdir)
 
     if(f == NULL)
         WARN("Could not open %s\\%s\n", subdir, fname);
+#endif
+
     return NULL;
 }
 

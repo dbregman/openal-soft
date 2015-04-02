@@ -817,9 +817,12 @@ BOOL APIENTRY DllMain(HINSTANCE hModule, DWORD reason, LPVOID lpReserved)
     switch(reason)
     {
         case DLL_PROCESS_ATTACH:
+#if 0       // Disable - doesn't compile on windows phone, plus why would it
+            // be desirable to prevent the user from calling FreeLibrary effectively?
             /* Pin the DLL so we won't get unloaded until the process terminates */
             GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_PIN | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
                                (WCHAR*)hModule, &hModule);
+#endif
             alc_init();
             break;
 
@@ -1694,13 +1697,7 @@ static void alcSetError(ALCdevice *device, ALCenum errorCode)
 {
     if(TrapALCError)
     {
-#ifdef _WIN32
-        /* DebugBreak() will cause an exception if there is no debugger */
-        if(IsDebuggerPresent())
-            DebugBreak();
-#elif defined(SIGTRAP)
-        raise(SIGTRAP);
-#endif
+        alDebugBreak();
     }
 
     if(device)

@@ -38,13 +38,7 @@ ALvoid alSetError(ALCcontext *Context, ALenum errorCode)
     ALenum curerr = AL_NO_ERROR;
     if(TrapALError)
     {
-#ifdef _WIN32
-        /* DebugBreak will cause an exception if there is no debugger */
-        if(IsDebuggerPresent())
-            DebugBreak();
-#elif defined(SIGTRAP)
-        raise(SIGTRAP);
-#endif
+        alDebugBreak();
     }
     ATOMIC_COMPARE_EXCHANGE_STRONG(ALenum, &Context->LastError, &curerr, errorCode);
 }
@@ -59,12 +53,7 @@ AL_API ALenum AL_APIENTRY alGetError(void)
     {
         if(TrapALError)
         {
-#ifdef _WIN32
-            if(IsDebuggerPresent())
-                DebugBreak();
-#elif defined(SIGTRAP)
-            raise(SIGTRAP);
-#endif
+            alDebugBreak();
         }
         return AL_INVALID_OPERATION;
     }

@@ -9,6 +9,19 @@ extern "C" {
 
 extern ALboolean TrapALError;
 
+inline void alDebugBreak()
+{
+#ifdef _WIN32
+    /* DebugBreak will cause an exception if there is no debugger */
+    if(IsDebuggerPresent())
+    {
+        __debugbreak();
+    }
+#elif defined(SIGTRAP)
+    raise(SIGTRAP);
+#endif
+}
+
 ALvoid alSetError(ALCcontext *Context, ALenum errorCode);
 
 #define SET_ERROR_AND_RETURN(ctx, err) do {                                    \

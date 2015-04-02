@@ -79,7 +79,11 @@ inline void althrd_exit(int res)
 
 inline void althrd_yield(void)
 {
+#if WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP
     SwitchToThread();
+#else
+    Sleep(1);
+#endif
 }
 
 
