@@ -166,7 +166,7 @@ int althrd_join(althrd_t thr, int *res)
     HANDLE hdl = RemoveUIntMapKey(&ThrdIdHandle, thr);
     if(!hdl) return althrd_error;
 
-    WaitForSingleObject(hdl, INFINITE);
+    WaitForSingleObjectEx(hdl, INFINITE, FALSE);
     GetExitCodeThread(hdl, &code);
     CloseHandle(hdl);
 
@@ -198,7 +198,7 @@ int almtx_init(almtx_t *mtx, int type)
     if(type != almtx_plain)
         return althrd_error;
 
-    InitializeCriticalSection(mtx);
+    InitializeCriticalSectionEx(mtx, 0, 0);
     return althrd_success;
 }
 

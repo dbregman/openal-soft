@@ -85,7 +85,7 @@ DEFINE_PROPERTYKEY(PKEY_AudioEndpoint_FormFactor, 0x1da5d803, 0xd492, 0x4edd, 0x
 #include <ieeefp.h>
 #endif
 
-#ifdef _WIN32_IE
+#if WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP
 #include <shlobj.h>
 #endif
 

@@ -316,6 +316,10 @@ typedef ALuint64SOFT ALuint64;
 #endif
 #endif
 
+#ifdef _MSC_VER
+#pragma warning(disable:4098) // 'void' function returning a value
+#endif
+
 
 static const union {
     ALuint u;
@@ -961,7 +965,8 @@ void FillCPUCaps(ALuint capfilter);
 
 FILE *OpenDataFile(const char *fname, const char *subdir);
 
-#if WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP
+#if defined(WIN32) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
+// getenv is only available to desktop apps
 inline const char *getenv(const char *var)
 {
 	return NULL;

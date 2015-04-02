@@ -32,7 +32,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#ifdef _WIN32_IE
+
+#if WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP
 #include <shlobj.h>
 #endif
 
