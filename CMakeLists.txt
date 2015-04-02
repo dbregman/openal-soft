@@ -41,7 +41,6 @@ OPTION(ALSOFT_HRTF_DEFS "Install HRTF definition files" ON)
 
 IF(WIN32)
     SET(LIBNAME OpenAL32)
-    ADD_DEFINITIONS("-D_WIN32 -D_WIN32_WINNT=0x0502")
 
     # This option is mainly for static linking OpenAL Soft into another project
     # that already defines the IDs. It is up to that project to ensure all
@@ -823,6 +822,7 @@ ENDIF()
 OPTION(ALSOFT_REQUIRE_WINMM "Require Windows Multimedia backend" OFF)
 OPTION(ALSOFT_REQUIRE_DSOUND "Require DirectSound backend" OFF)
 OPTION(ALSOFT_REQUIRE_MMDEVAPI "Require MMDevApi backend" OFF)
+OPTION(ALSOFT_REQUIRE_XAUDIO2 "Require XAudio2 backend" OFF)
 IF(HAVE_WINDOWS_H)
     # Check MMSystem backend
     CHECK_INCLUDE_FILES("windows.h;mmsystem.h" HAVE_MMSYSTEM_H -D_WIN32_WINNT=0x0502)
@@ -864,6 +864,16 @@ IF(HAVE_WINDOWS_H)
             SET(ALC_OBJS  ${ALC_OBJS} Alc/backends/mmdevapi.c)
         ENDIF()
     ENDIF()
+
+    # Check for XAudio2 backend
+    # TODO - IF(HAVE_XAUDIO2_H)
+       OPTION(ALSOFT_BACKEND_XAUDIO2 "Enable XAudio2 backend" ON)
+       IF(ALSOFT_BACKEND_XAUDIO2)
+           SET(HAVE_XAUDIO2 1)
+           SET(BACKENDS  "${BACKENDS} XAudio2,")
+           SET(ALC_OBJS  ${ALC_OBJS} Alc/backends/xaudio2.c)
+        ENDIF()
+    # ENDIF()
 ENDIF()
 IF(ALSOFT_REQUIRE_WINMM AND NOT HAVE_WINMM)
     MESSAGE(FATAL_ERROR "Failed to enabled required WinMM backend")
@@ -873,6 +883,9 @@ IF(ALSOFT_REQUIRE_DSOUND AND NOT HAVE_DSOUND)
 ENDIF()
 IF(ALSOFT_REQUIRE_MMDEVAPI AND NOT HAVE_MMDEVAPI)
     MESSAGE(FATAL_ERROR "Failed to enabled required MMDevApi backend")
+ENDIF()
+IF(ALSOFT_REQUIRE_XAUDIO2 AND NOT HAVE_XAUDIO2)
+    MESSAGE(FATAL_ERROR "Failed to enabled required XAudio2 backend")
 ENDIF()
 
 # Check PortAudio backend
